@@ -105,3 +105,8 @@ plt.ylabel('accuracy')
 plt.legend()
 #plt.title('Train vs Test Accuracy')
 plt.show()
+
+"""
+훈련데이터로 실행한 결과:손실은 줄어들고 정확도는 올라가는 것을 확인할 수 있다.
+테스트 데이터로 실행한 결과:손실은 줄어들지만 변동성이 큼->과적합..?, 정확도는 점진적으로 증가하나 변동성이 큰것 같음
+"""
