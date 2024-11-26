@@ -34,7 +34,7 @@ max_iterations =1000
 #학습률 낮춰서 설정
 lr = 0.001
 #배치 정규화 적용
-use_batchnorm=True
+
 
 # 에폭 계산
 #iterations_per_epoch = train_size // batch_size
@@ -54,7 +54,7 @@ train_acc = {}
 
 for key in optimizers.keys():
      #은닉층의 유런수 150개, 5개의 은닉층, 출력층 10개
-    networks[key] = MultiLayerNetExtend(input_size=784, hidden_size_list=[200,200,200,200], output_size=10)
+    networks[key] = MultiLayerNetExtend(input_size=784, hidden_size_list=[200,200,200,200], output_size=10,use_batchnorm=True)
     train_loss[key] = []
     train_acc[key] = []
     #test_loss[key] = []
