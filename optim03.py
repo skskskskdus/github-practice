@@ -53,7 +53,7 @@ test_loss = {}
 test_acc = {}
 
 for key in optimizers.keys():
-     #은닉층의 유런수 150개, 5개의 은닉층, 출력층 10개
+     #은닉층의 유런수 200개, 4개의 은닉층, 출력층 10개
     networks[key] = MultiLayerNetExtend(input_size=784, hidden_size_list=[200,200,200,200], output_size=10,use_batchnorm=True)
     #train_loss[key] = []
     #train_acc[key] = []
@@ -101,7 +101,7 @@ for i in range(max_iterations):
 # 손실 그래프 비교 (옵티마이저별로 그리기)
 plt.figure(figsize=(10, 6))
 #plt.plot(train_loss['Adam'], label='Train Loss (Adam)', color='blue', linestyle='--')
-plt.plot(test_loss['Adam'], label='Test Loss (Adam)', color='red')
+#plt.plot(test_loss['Adam'], label='Test Loss (Adam)', color='red')
 
 #plt.plot(train_loss['AdaGrad'], label='Train Loss (AdaGrad)', color='orange', linestyle='--')
 plt.plot(test_loss['AdaGrad'], label='Test Loss (AdaGrad)', color='yellow')
