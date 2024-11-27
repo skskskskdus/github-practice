@@ -47,64 +47,59 @@ optimizers['Adam'] = Adam(lr)
 optimizers['AdaGrad'] = AdaGrad(lr)
 
 networks = {}
-#train_loss = {}
-#train_acc = {}
-test_loss = {}
-test_acc = {}
+train_loss = {}
+train_acc = {}
+#test_loss = {}
+#test_acc = {}
 
 for key in optimizers.keys():
      #은닉층의 유런수 200개, 4개의 은닉층, 출력층 10개
     networks[key] = MultiLayerNetExtend(input_size=784, hidden_size_list=[200,200,200,200], output_size=10,use_batchnorm=True)
-    #train_loss[key] = []
-    #train_acc[key] = []
-    test_loss[key] = []
-    test_acc[key] = []
+    train_loss[key] = []
+    train_acc[key] = []
+    #test_loss[key] = []
+    #test_acc[key] = []
 
 # 훈련 시작
+#성능 평가:x_batch, t_batch -> x_test, t_test
 for i in range(max_iterations):
     batch_mask = np.random.choice(train_size, batch_size)
     x_batch = x_train[batch_mask]
     t_batch = t_train[batch_mask]
 
     for key in optimizers.keys():
-            grads = networks[key].gradient(x_batch, t_batch)
-            optimizers[key].update(networks[key].params, grads)
+        # 그래디언트 계산 및 가중치 업데이트
+        grads = networks[key].gradient(x_batch, t_batch)
+        optimizers[key].update(networks[key].params, grads)
 
-            loss = networks[key].loss(x_batch, t_batch)
-            acc = networks[key].accuracy(x_batch, t_batch)
+        # 현재 미니배치에 대한 손실 및 정확도 계산
+        loss = networks[key].loss(x_batch, t_batch)
+        acc = networks[key].accuracy(x_batch, t_batch)
 
-            test_loss[key].append(loss)
-            test_acc[key].append(acc)
-        
-            #train_loss[key].append(loss)
-            #train_acc[key].append(acc)
+        # 훈련 데이터에 대한 손실 및 정확도 기록
+        train_loss[key].append(loss)
+        train_acc[key].append(acc)
 
+        # 마지막으로 계산한 손실과 정확도를 저장 (중복 계산 방지)
+        last_loss = loss
+        last_acc = acc
     
     if i % 100 == 0:
-        # 에폭이 끝날 때 평균 손실 및 정확도 출력
         print(f"========== Epoch {i} ==========")
         for key in optimizers.keys():
             loss = networks[key].loss(x_batch, t_batch)
             acc = networks[key].accuracy(x_batch, t_batch)
+            # 훈련 데이터 손실 및 정확도 출력
+            print(f"{key} | Train Loss: {str(loss)} | Train Accuracy: {str(acc)}")
 
-            print(f"{key} | Avg Loss: {loss:.4f} | Avg Accuracy: {acc:.4f}")
-
-            # 테스트 데이터 손실 및 정확도
-            test_loss_epoch = networks[key].loss(x_test, t_test)
-            test_acc_epoch = networks[key].accuracy(x_test, t_test)
-
-            test_loss[key].append(test_loss_epoch)
-            test_acc[key].append(test_acc_epoch)
-
-            print(f"{key} | Test Loss: {test_loss_epoch:.4f} | Test Accuracy: {test_acc_epoch:.4f}")
 
 # 손실 그래프 비교 (옵티마이저별로 그리기)
 plt.figure(figsize=(10, 6))
-#plt.plot(train_loss['Adam'], label='Train Loss (Adam)', color='blue', linestyle='--')
+plt.plot(train_loss['Adam'], label='Train Loss (Adam)', color='blue', linestyle='--')
 #plt.plot(test_loss['Adam'], label='Test Loss (Adam)', color='red')
 
-#plt.plot(train_loss['AdaGrad'], label='Train Loss (AdaGrad)', color='orange', linestyle='--')
-plt.plot(test_loss['AdaGrad'], label='Test Loss (AdaGrad)', color='yellow')
+plt.plot(train_loss['AdaGrad'], label='Train Loss (AdaGrad)', color='orange', linestyle='--')
+#plt.plot(test_loss['AdaGrad'], label='Test Loss (AdaGrad)', color='yellow')
 
 plt.xlabel('Iteration')
 plt.ylabel('Loss')
@@ -114,11 +109,11 @@ plt.show()
 
 # 정확도 그래프 비교 (옵티마이저별로 그리기)
 plt.figure(figsize=(10, 6))
-#plt.plot(train_acc['Adam'], label='Train Accuracy (Adam)', color='blue', linestyle='--')
-plt.plot(test_acc['Adam'], label='Test Accuracy (Adam)', color='red')
+plt.plot(train_acc['Adam'], label='Train Accuracy (Adam)', color='blue', linestyle='--')
+#plt.plot(test_acc['Adam'], label='Test Accuracy (Adam)', color='red')
 
-#plt.plot(train_acc['AdaGrad'], label='Train Accuracy (AdaGrad)', color='orange', linestyle='--')
-plt.plot(test_acc['AdaGrad'], label='Test Accuracy (AdaGrad)', color='yellow')
+plt.plot(train_acc['AdaGrad'], label='Train Accuracy (AdaGrad)', color='orange', linestyle='--')
+#plt.plot(test_acc['AdaGrad'], label='Test Accuracy (AdaGrad)', color='yellow')
 
 plt.xlabel('Iteration')
 plt.ylabel('Accuracy')
