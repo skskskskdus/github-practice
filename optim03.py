@@ -30,7 +30,7 @@ from common.multi_layer_net_extend import MultiLayerNetExtend
 train_size = x_train.shape[0]
 batch_size = 128
 #최대 반복 횟수 100회로 감소
-max_iterations =1000
+max_iterations =500
 #학습률 낮춰서 설정
 lr = 0.001
 #배치 정규화 적용
@@ -47,18 +47,18 @@ optimizers['Adam'] = Adam(lr)
 optimizers['AdaGrad'] = AdaGrad(lr)
 
 networks = {}
-train_loss = {}
-train_acc = {}
-#test_loss = {}
-#test_acc = {}
+#train_loss = {}
+#train_acc = {}
+test_loss = {}
+test_acc = {}
 
 for key in optimizers.keys():
      #은닉층의 유런수 150개, 5개의 은닉층, 출력층 10개
     networks[key] = MultiLayerNetExtend(input_size=784, hidden_size_list=[200,200,200,200], output_size=10,use_batchnorm=True)
-    train_loss[key] = []
-    train_acc[key] = []
-    #test_loss[key] = []
-    #test_acc[key] = []
+    #train_loss[key] = []
+    #train_acc[key] = []
+    test_loss[key] = []
+    test_acc[key] = []
 
 # 훈련 시작
 for i in range(max_iterations):
@@ -73,8 +73,11 @@ for i in range(max_iterations):
             loss = networks[key].loss(x_batch, t_batch)
             acc = networks[key].accuracy(x_batch, t_batch)
 
-            train_loss[key].append(loss)
-            train_acc[key].append(acc)
+            test_loss[key].append(loss)
+            test_acc[key].append(acc)
+        
+            #train_loss[key].append(loss)
+            #train_acc[key].append(acc)
 
     
     if i % 100 == 0:
@@ -90,18 +93,18 @@ for i in range(max_iterations):
             test_loss_epoch = networks[key].loss(x_test, t_test)
             test_acc_epoch = networks[key].accuracy(x_test, t_test)
 
-        #test_loss[key].append(test_loss_epoch)
-        #test_acc[key].append(test_acc_epoch)
+            test_loss[key].append(test_loss_epoch)
+            test_acc[key].append(test_acc_epoch)
 
             print(f"{key} | Test Loss: {test_loss_epoch:.4f} | Test Accuracy: {test_acc_epoch:.4f}")
 
 # 손실 그래프 비교 (옵티마이저별로 그리기)
 plt.figure(figsize=(10, 6))
-plt.plot(train_loss['Adam'], label='Train Loss (Adam)', color='blue', linestyle='--')
-#plt.plot(test_loss['Adam'], label='Test Loss (Adam)', color='red')
+#plt.plot(train_loss['Adam'], label='Train Loss (Adam)', color='blue', linestyle='--')
+plt.plot(test_loss['Adam'], label='Test Loss (Adam)', color='red')
 
-plt.plot(train_loss['AdaGrad'], label='Train Loss (AdaGrad)', color='orange', linestyle='--')
-#plt.plot(test_loss['AdaGrad'], label='Test Loss (AdaGrad)', color='yellow')
+#plt.plot(train_loss['AdaGrad'], label='Train Loss (AdaGrad)', color='orange', linestyle='--')
+plt.plot(test_loss['AdaGrad'], label='Test Loss (AdaGrad)', color='yellow')
 
 plt.xlabel('Iteration')
 plt.ylabel('Loss')
@@ -111,11 +114,11 @@ plt.show()
 
 # 정확도 그래프 비교 (옵티마이저별로 그리기)
 plt.figure(figsize=(10, 6))
-plt.plot(train_acc['Adam'], label='Train Accuracy (Adam)', color='blue', linestyle='--')
-#plt.plot(test_acc['Adam'], label='Test Accuracy (Adam)', color='red')
+#plt.plot(train_acc['Adam'], label='Train Accuracy (Adam)', color='blue', linestyle='--')
+plt.plot(test_acc['Adam'], label='Test Accuracy (Adam)', color='red')
 
-plt.plot(train_acc['AdaGrad'], label='Train Accuracy (AdaGrad)', color='orange', linestyle='--')
-#plt.plot(test_acc['AdaGrad'], label='Test Accuracy (AdaGrad)', color='yellow')
+#plt.plot(train_acc['AdaGrad'], label='Train Accuracy (AdaGrad)', color='orange', linestyle='--')
+plt.plot(test_acc['AdaGrad'], label='Test Accuracy (AdaGrad)', color='yellow')
 
 plt.xlabel('Iteration')
 plt.ylabel('Accuracy')
