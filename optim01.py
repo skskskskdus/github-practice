@@ -28,12 +28,12 @@ train_size = x_train.shape[0]
 #배치 크기 128로 서정
 batch_size = 128
 #최대 반복 횟수 1000회
-max_iterations = 1000
+max_iterations = 100
 lr = 0.01
 
 # 에폭 계산
 iterations_per_epoch = train_size // batch_size
-max_epochs = 40 #최대 에폭수
+max_epochs = 10 #최대 에폭수
 
 # 옵티마이저 설정: adam 사용, 실험용 설정, 일단 기본 설정으로 적용
 optimizers = {}
