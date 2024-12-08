@@ -17,22 +17,23 @@ from common.multi_layer_net_extend import MultiLayerNetExtend
 #하이퍼파라미터 설정
 train_size = x_train.shape[0]
 batch_size = 256
-max_iterations =300
+max_iterations =500
 #학습률 낮춰서 설정
 lr = 0.001
 
 #네트워크 설정1:은닉층 4개,유닛수 200개,배치정규화,가중치 초기화 방법 적용,활성화 함수 relu
 #드롭아웃 적용,가중치 감소 적용
+#초기에 기울기 손실 문제 발생->가중치 표준편차 변경
 network1=MultiLayerNetExtend(
     input_size=784,
-    hidden_size_list=[200,200,200,200],
+    hidden_size_list=[300,200,100,200,100],
     output_size=10,
     activation='relu',
     use_batchnorm=True,
     weight_init_std='he',
-     weight_decay_lambda=0.0001,
+    weight_decay_lambda=0.00001,
     use_dropout=True,
-    dropout_ration=0.4
+    dropout_ration=0.2
 
 )
 
@@ -45,9 +46,9 @@ network2=MultiLayerNetExtend(
     activation='relu',
     use_batchnorm=True,
     weight_init_std='he',
-    weight_decay_lambda=0.0001,
+    weight_decay_lambda=0.00001,
     use_dropout=True,
-    dropout_ration=0.3
+    dropout_ration=0.1
 
 )
 
